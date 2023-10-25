@@ -73,6 +73,20 @@ app.get("/getBlogsByTag/:tag", async (req, res) => {
   }
 });
 
+app.post("/getAllBlogs",verifyToken, verifyManager, async (req, res) => {
+  try {
+    const blogs_pointer = blogs.find();
+    const blogs_list = [];
+    for await (const blog of blogs_pointer) {
+      blogs_list.push(blog);
+    }
+    res.status(200).json({ message: "Found blogs.", result: blogs_list });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ message: "Something went wrong" });
+  }
+});
+
 app.post("/changeBlogStatus", verifyToken, verifyManager, async (req, res) => {
   if (!req.body.blogId) {
     return res.status(400).json({ message: "Missing blog ID." });
